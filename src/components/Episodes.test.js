@@ -1,14 +1,10 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
-import App from './App';
+import Episodes from './Episodes'
 
-import { fetchShow as mockFetchShow } from './api/fetchShow';
-
-jest.mock('./api/fetchShow.js');
-
-const mockData = {
-    data: {
+const mockData = [
+    {
       id: 2993,
       url: "http://www.tvmaze.com/shows/2993/stranger-things",
       name: "Stranger Things",
@@ -110,22 +106,8 @@ const mockData = {
         ]
       }
     }
-};
+];
 
-test('renders App without crashing', async () => {
-    mockFetchShow.mockResolvedValueOnce(mockData);
-    render(<App />);
-})
-
-test('selecting an option from the dropdown shows the new data', async () => {
-    mockFetchShow.mockResolvedValueOnce(mockData);
-
-    const { findByText, getByText } = render(<App />);
-
-    const select = await findByText(/select a season/i);
-
-    fireEvent.mouseDown(select);
-    const selectionOne = getByText(/season 1/i);
-    fireEvent.click(selectionOne);
-    expect(getByText(/episode 1/i)).toHaveTextContent(/season 1/i);
-})
+test('renders Episodes without crashing', () => {
+    render(<Episodes episodes={mockData} />)
+});
