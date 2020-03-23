@@ -1,11 +1,4 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-
-import App from './App';
-
-import { fetchShow as mockFetchShow } from './api/fetchShow';
-
-jest.mock('./api/fetchShow.js');
+import { formatSeasons } from './formatSeasons';
 
 const mockData = {
     data: {
@@ -162,25 +155,8 @@ const mockData = {
     }
   };
 
-test('renders App without crashing', async () => {
-    mockFetchShow.mockResolvedValueOnce(mockData);
-    render(<App />);
-})
-
-test('selecting an option from the dropdown shows the new data', async () => {
-    mockFetchShow.mockResolvedValueOnce(mockData);
-
-    const { findByText, getByText } = render(<App />);
-
-    const select = await findByText(/select a season/i);
-
-    fireEvent.mouseDown(select);
-    const selectionOne = getByText(/season 1/i);
-    fireEvent.click(selectionOne);
-    expect(getByText(/episode 1/i)).toHaveTextContent(/season 1/i);
-
-    fireEvent.mouseDown(select);
-    const selectionTwo = getByText(/season 2/i);
-    fireEvent.click(selectionTwo);
-    expect(getByText(/episode 1/i)).toHaveTextContent(/season 2/i);
+test('formatting helper function works', () => {
+    const output = formatSeasons(mockData.data._embedded.episodes);
+    expect(output).toHaveProperty("Season 1");
+    expect(output).toHaveProperty("Season 2");
 })
